@@ -1,0 +1,28 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [ "main" ] # Trigger on pushes to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # The runner environment
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4 # Action to fetch your code
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }} # Use GitHub secrets for security
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v6
+      with:
+        context: . # Use the current repository as the build context
+        push: true # Automatically push the image if build succeeds
+        tags: ${{ secrets.DOCKER_USERNAME }}/your-image-name:latest # Tag the image with your username and image name
+        cache-from: type=gha,scope=${{ github.repository }} # Enable layer caching for faster builds
+        cache-to: type=gha,scope=${{ github.repository }},mode=max # Store cache for future builds

@@ -18,7 +18,7 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }} # Use GitHub secrets for security
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Build and push Docker image
+    - name: Build and push Docker Image
       uses: docker/build-push-action@v6
       with:
         context: . # Use the current repository as the build context
